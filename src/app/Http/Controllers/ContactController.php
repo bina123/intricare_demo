@@ -25,6 +25,7 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $contacts = Contact::with('mergedInto')
+            ->when(!$request->filled('show_merged'), fn($q) => $q->whereNull('merged_into'))
             ->when($request->filled('name'), fn($q) => $q->where('name', 'like', "%{$request->name}%"))
             ->when($request->filled('email'), fn($q) => $q->where('email', 'like', "%{$request->email}%"))
             ->when($request->filled('gender'), fn($q) => $q->where('gender', $request->gender))
@@ -160,6 +161,7 @@ class ContactController extends Controller
         $secondary = Contact::with('customFieldValues.field')->findOrFail($id);
         $contacts = Contact::with('customFieldValues.field')
             ->where('id', '!=', $id)
+            ->whereNull('merged_into') // ✅ exclude already merged contacts
             ->get();
 
         return view('contacts.partials.merge-modal', compact('secondary', 'contacts'));

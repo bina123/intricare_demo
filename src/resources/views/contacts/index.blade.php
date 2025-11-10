@@ -45,13 +45,13 @@
     <div class="card mb-3">
         <div class="card-body">
             <form id="filterForm" class="row g-2">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="text" name="name" class="form-control" placeholder="Search Name">
                 </div>
                 <div class="col-md-3">
                     <input type="text" name="email" class="form-control" placeholder="Search Email">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select name="gender" class="form-select" id="genderFilter">
                         <option value="">All Genders</option>
                         <option>Male</option>
@@ -59,7 +59,14 @@
                         <option>Other</option>
                     </select>
                 </div>
-                <div class="col-md-3 text-end">
+                <div class="col-md-3 d-flex align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showMerged" name="show_merged" value="1"
+                            {{ request('show_merged') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="showMerged">Show Merged Contacts</label>
+                    </div>
+                </div>
+                <div class="col-md-2 text-end">
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <button type="button" class="btn btn-success" id="btnAdd">+ Add Contact</button>
                 </div>
@@ -207,6 +214,10 @@
             fetchContacts();
         });
         $('#genderFilter').on('change', function() {
+            fetchContacts();
+        });
+
+        $('#showMerged').on('change', function() {
             fetchContacts();
         });
 
