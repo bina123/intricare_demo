@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_intricare_app
+    restart: unless-stopped
+    working_dir: /var/www/html/src
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: laravel__intricare_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: crm
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: intricare
+      MYSQL_PASSWORD: Intricare_pwd
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:
